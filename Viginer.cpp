@@ -1,61 +1,86 @@
 #include <iostream>
 #include <string>
-#include <cctype>
+#include <vector>
+#include <cstdio>
+using namespace std;
 
-std::string encryptVigenere(const std::string& message, const std::string& key) {
-    std::string encryptedMessage;
-    int keyLength = key.length();
-    int messageLength = message.length();
+//Функция для шифрования текста методом Виженера
+string encryptVigenere(const string& plaintext, const string& keyword) {
+    string ciphertext;
+    int keyLength = keyword.length();
+    int textLength = plaintext.length();
 
-    for (int i = 0, j = 0; i < messageLength; ++i) {
-        char currentChar = message[i];
+    for (int i = 0; i < textLength; i++) {
+        char plainChar = plaintext[i];
+        char keyChar = keyword[i % keyLength];
+        char encryptedChar = ' ';
 
-        if (isalpha(currentChar)) {
-            bool isUpperCase = isupper(currentChar);
-            char baseChar = isUpperCase ? 'A' : 'a';
-            char encryptedChar = ((currentChar - baseChar) + (toupper(key[j % keyLength]) - 'A')) % 26 + baseChar;
-            encryptedMessage.push_back(encryptedChar);
-            ++j;
+        if (isalpha(plainChar)) { //проверка, является ли символ буквой
+            if (islower(plainChar)) //если буква в нижнем регистре
+                encryptedChar = ((plainChar - 'a') + (tolower(keyChar) - 'a')) % 26 + 'a'; //шифрование с учётом ключевого символа
+            else if (isupper(plainChar)) //если буква в верхнем регистре
+                encryptedChar = ((plainChar - 'A') + (toupper(keyChar) - 'A')) % 26 + 'A'; //шифрование с учётом ключевого символа
         } else {
-            encryptedMessage.push_back(currentChar);
+            encryptedChar = plainChar; //если символ не является буквой, оставляем его без изменений
         }
+
+        ciphertext.push_back(encryptedChar); //добавление зашифрованного символа в строку шифротекста
     }
 
-    return encryptedMessage;
+    return ciphertext; //возвращает зашифрованный текст
 }
+//Функция для дешифрования текста методом Виженера 
+string decryptVigenere(const string& ciphertext, const string& keyword) {
+    string plaintext;
+    int keyLength = keyword.length();//длинна ключа
+    int textLength = ciphertext.length();//длинна сообщения
 
-std::string decryptVigenere(const std::string& message, const std::string& key) {
-    std::string decryptedMessage;
-    int keyLength = key.length();
-    int messageLength = message.length();
+    for (int i = 0; i < textLength; i++) {
+        char cipherChar = ciphertext[i];
+        char keyChar = keyword[i % keyLength];
+        char decryptedChar = ' ';
 
-    for (int i = 0, j = 0; i < messageLength; ++i) {
-        char currentChar = message[i];
-
-        if (isalpha(currentChar)) {
-            bool isUpperCase = isupper(currentChar);
-            char baseChar = isUpperCase ? 'A' : 'a';
-            char decryptedChar = ((currentChar - baseChar) - (toupper(key[j % keyLength]) - 'A') + 26) % 26 + baseChar;
-            decryptedMessage.push_back(decryptedChar);
-            ++j;
+        if (isalpha(cipherChar)) { //проверка, является ли символ буквой
+            if (islower(cipherChar)) //если буква в нижнем регистре 
+                decryptedChar = ((cipherChar - 'a') - (tolower(keyChar) - 'a') + 26) % 26 + 'a'; //дешифрование с учётом ключевого символа
+            else if (isupper(cipherChar)) //если буква в верхнем регистре
+                decryptedChar = ((cipherChar - 'A') - (toupper(keyChar) - 'A') + 26) % 26 + 'A'; //дешифрование с учётом ключевого символа
         } else {
-            decryptedMessage.push_back(currentChar);
+            decryptedChar = cipherChar; //если символ не является буквой, оставляем его без изменений
         }
+
+        plaintext.push_back(decryptedChar); //добавление расшифрованного символа в строку исходного текста
     }
 
-    return decryptedMessage;
+    return plaintext; //возвращает расшифрованный текст
+}
+//Функция для получения результатов шифрования и дешифрования 
+vector<string> getResults(const string& plaintext, const string& keyword) {
+    vector<string> results; //создание вектора строк
+    string encryptedText = encryptVigenere(plaintext, keyword);
+    string decryptedText = decryptVigenere(encryptedText, keyword);
+
+    results.push_back("Plaintext: " + plaintext);
+    results.push_back("Keyword: " + keyword);
+    results.push_back("Encrypted Text: " + encryptedText);
+    results.push_back("Decrypted Text: " + decryptedText);
+
+    return results;
 }
 
 int main() {
-    std::string message = "Hello world! Привет мир!";
-    std::string key = "secretkey";
+    string plaintext = "";
+    string keyword = "";
+    cout<<"Введите ключ состоящий только из символов: "<<endl;
+    cin>>keyword;
+    cout<<"Введите сообщение:"<<endl;
+    //cin>>plaintext;
+    cin.ignore();
+    getline(cin, plaintext);
+    vector<string> results = getResults(plaintext, keyword); //получение результатов шифрования и дешифрования 
 
-    std::string encryptedMessage = encryptVigenere(message, key);
-    std::string decryptedMessage = decryptVigenere(encryptedMessage, key);
-
-    std::cout << "Original message: " << message << std::endl;
-    std::cout << "Encrypted message: " << encryptedMessage << std::endl;
-    std::cout << "Decrypted message: " << decryptedMessage << std::endl;
-
+    for (const string& result : results) {
+        cout << result << endl;
+    }
     return 0;
 }
