@@ -1,5 +1,5 @@
 #include <iostream>
-#include "VigenereCipher.h"
+#include "vigener.h"
 #include "AtbashCipher.h"
 
 using namespace std;
@@ -46,7 +46,7 @@ int main() {
                         cout << "Введите ключ: ";
                         cin >> key;
 
-                        encryptVigenere(message, key);
+                        vigener_encryption(message, key);
                         cout << "Зашифрованное сообщение: " << message << endl;
                         break;
 
@@ -58,7 +58,7 @@ int main() {
                         cout << "Введите ключ: ";
                         cin >> key;
 
-                        decryptVigenere(message, key);
+                        vigener_decryption(message, key);
                         cout << "Расшифрованное сообщение: " << message << endl;
                         break;
 
