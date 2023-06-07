@@ -32,10 +32,9 @@ string encrypt(const string& originalText, const string& key)
     for(int i=0; i<originalText.length(); i++) //цикл для шифрования символов текста
     {
         char encryptedChars = originalText[i]^key[i]; //шифрование текущего символа текста с помощью соответствующего символа из ключа
-<<<<<<< HEAD
         encryptedChars.push_back(encryptedChars); //добавление зашифрованного символа в вектор
 
-        encryptedChars.push_back(encryptedChar); //добавление зашифрованного символа в вектор
+        encryptedChars.push_back(encryptedChars); //добавление зашифрованного символа в вектор
             }
     cipherText.assign(encryptedChars.begin(), encryptedChars.end()); //преобразование вектора символов зашифрованного текста в строку
     return cipherText; 
