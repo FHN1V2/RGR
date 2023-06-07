@@ -1,26 +1,28 @@
 #include <iostream>
-#include "vigener.h"
+#include <windows.h>
+#include "viginer.h"
 #include "AtbashCipher.h"
-
 using namespace std;
 
 void showEncryptionMethods() {
-    cout << "=== Выберите метод шифрования ===" << endl;
-    cout << "1. Шифр Виженера" << endl;
-    cout << "2. Шифр Атбаш" << endl;
-    cout << "0. Выход" << endl;
-    cout << "Введите номер метода шифрования: ";
+    cout << "=== Method ===" << endl;
+    cout << "1. Viginer" << endl;
+    cout << "2. Atbash" << endl;
+    cout << "0. Exit" << endl;
+    cout << "Enter the number of the encryption method: ";
 }
 
 void showEncryptionActions() {
-    cout << "=== Выберите действие ===" << endl;
-    cout << "1. Зашифровать сообщение" << endl;
-    cout << "2. Расшифровать сообщение" << endl;
-    cout << "0. Вернуться к выбору метода шифрования" << endl;
-    cout << "Введите номер действия: ";
+    cout << "=== Select an action ===" << endl;
+    cout << "1. Encrypt the message" << endl;
+    cout << "2. Decrypt the message" << endl;
+    cout << "0. Go back to choosing the encryption method" << endl;
+    cout << "Enter the action number: ";
 }
 
 int main() {
+    SetConsoleCP(1251);
+    SetConsoleOutputCP(1251);
     int methodChoice;
     int actionChoice;
     string message;
@@ -39,34 +41,34 @@ int main() {
 
                 switch (actionChoice) {
                     case 1:
-                        cout << "Введите сообщение для шифрования: ";
+                        cout << "Enter the encryption message: ";
                         cin.ignore();
                         getline(cin, message);
 
-                        cout << "Введите ключ: ";
+                        cout << "Enter the key: ";
                         cin >> key;
 
-                        vigener_encryption(message, key);
-                        cout << "Зашифрованное сообщение: " << message << endl;
+                        
+                        cout << "Encrypted message: " << viginer_encryption(message,key) << endl;
                         break;
 
                     case 2:
-                        cout << "Введите сообщение для расшифровки: ";
+                        cout << "Enter the decryption message: ";
                         cin.ignore();
                         getline(cin, message);
 
-                        cout << "Введите ключ: ";
+                        cout << "Enter the key: ";
                         cin >> key;
 
-                        vigener_decryption(message, key);
-                        cout << "Расшифрованное сообщение: " << message << endl;
+                       
+                        cout << "Decrypted message: " <<  viginer_decryption(message,key) << endl;
                         break;
 
                     case 0:
                         break;
 
                     default:
-                        cout << "Некорректный выбор. Попробуйте снова." << endl;
+                        cout << "Incorrect choice. Try again." << endl;
                 }
 
                 break;
@@ -78,39 +80,39 @@ int main() {
 
                 switch (actionChoice) {
                     case 1:
-                        cout << "Введите сообщение для шифрования: ";
+                        cout << "Enter the encryption message: ";
                         cin.ignore();
                         getline(cin, message);
 
                         atbashEncrypt(message);
-                        cout << "Зашифрованное сообщение: " << message << endl;
+                        cout << "Encrypted message: "<<message  << endl;
                         break;
 
                     case 2:
-                        cout << "Введите сообщение для расшифровки: ";
+                        cout << "Enter the decryption message: ";
                         cin.ignore();
                         getline(cin, message);
 
                         atbashDecrypt(message);
-                        cout << "Расшифрованное сообщение: " << message << endl;
+                        cout << "Decrypted message: " << message << endl;
                         break;
 
                     case 0:
                         break;
 
                     default:
-                        cout << "Некорректный выбор. Попробуйте снова." << endl;
+                        cout << "Incorrect choice. Try again." << endl;
                 }
 
                 break;
             }
 
             case 0:
-                cout << "Программа завершена." << endl;
+                cout << "The program is completed." << endl;
                 return 0;
 
             default:
-                cout << "Некорректный выбор. Попробуйте снова." << endl;
+                cout << "Incorrect choice. Try again." << endl;
         }
     }
 

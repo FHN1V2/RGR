@@ -3,9 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <string>
-#include <Windows.h>
-
-std::string vigener_encryption();
-std::string vigener_decryption(const std::string& shifr);
+using namespace std;
+string viginer_encryption(string &message,string key);
+string viginer_decryption(const string& shifr,string key);
 
 #endif // VIGENER_H_INCLUDED

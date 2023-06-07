@@ -1,6 +1,5 @@
 
-#include "vigener.h"
-
+#include "viginer.h"
 
 using namespace std;
 
@@ -17,24 +16,8 @@ void KeyIsWord(const string& key)
     }
 }
 
-string vigener_encryption()
-{
-    setlocale(LC_ALL, "ru");
-    string message;
-    cout << "Enter massage: " << endl;
-    cin.ignore();
-    getline(cin, message);
-    string key;
-    cout << "Enter word key: ";
-    cin >> key;
-    try{
-        KeyIsWord(key);
-    }
-    catch (char x){
-        std::cout << "Enter word key for file: " ;
-        std::cin >> key;
-    }
-    string shifr = "";
+string viginer_encryption(string &message,string key)
+{   string shifr = "";
     for (int i = 0; i < message.length(); i++)
     {
         shifr += message[i] + key[i%(key.length())] - 'a';
@@ -42,18 +25,8 @@ string vigener_encryption()
     return shifr;
 }
 
-string vigener_decryption(const string& shifr)
+string viginer_decryption(const string& shifr,string key)
 {
-    string key;
-    cout << "Enter word key: ";
-    cin >> key;
-    try{
-        KeyIsWord(key);
-    }
-    catch (char x){
-        std::cout << "Enter word key for file: " ;
-        std::cin >> key;
-    }
     string message = "";
     for (int i = 0; i < shifr.length(); i++)
     {
