@@ -1,23 +1,24 @@
-from viginer_cipher import viginer_encryption, viginer_decryption
+from viginer_cipher import viginer_decryption,viginer_encryption
 from atbash_cipher import atbash_cipher
 from gronsfield_cipher import gronfield_encryption, gronsfield_decryption
 from polybius_cipher import polibius_encryption, polybius_decryption
 from vernam_cipher import vernam_cipher
 from xor_cipher import xor_encription, xor_description
 
-def write_file_content(message):
-    fileName=input("Enter file name ")
-    f=open(f"{fileName}.txt",'w')
-    for index in message:
-        f.write(index)
+def write_output(message):
+    #print (message)
+    fileName = input("Enter output file name: ")
+    with open(f"{fileName}.txt", "w",encoding='utf-8') as file:
+        file.write(message)
 
 
 
 def read_file_content():
-        fileName=input("Enter file name ")
-        with open(f'{fileName}.txt', 'r') as file:
-            text = file.read()
-        return text
+    fileName = input("Enter file name: ")
+    with open(f'{fileName}.txt', 'r',encoding='utf-8') as file:
+        text = file.read()
+    return text
+
 
 def Method_input():
     print("1. from file ")
@@ -80,7 +81,11 @@ if UserPass=="nstu":
                     else:
                         message =read_file_content()
                         key = input("Enter the key: ")
-                    print("Encrypted message:", viginer_encryption(message, key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", viginer_encryption(message, key))
+                    else:
+                        write_output(viginer_encryption(message, key))
 
                 elif action_choice == 2:
                     method=Method_input()
@@ -91,7 +96,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                 
                         key = input("Enter the key: ")
-                    print("Decrypted message:", viginer_decryption(message, key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypteded message:", viginer_decryption(message, key))
+                    else:
+                        write_output(viginer_encryption(message, key))
 
                 elif action_choice == 0:
                     pass
@@ -110,17 +119,23 @@ if UserPass=="nstu":
                         #key = input("Enter the key: ")
                     else:
                         message =read_file_content()
-                    print("Encrypted message:", atbash_cipher(message))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", atbash_cipher(message))
+                    else:
+                        write_output(atbash_cipher(message))
 
                 elif action_choice == 2:
                     method=Method_input()
                     if method==False:
                         message = input("Enter the encryption message: ")
-                    # key = input("Enter the key: ")
                     else:
                         message =read_file_content()
-                    #message = input("Enter the decryption message: ")
-                    print("Decrypted message:", atbash_cipher(message))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypted message:", atbash_cipher(message))
+                    else:
+                        write_output(atbash_cipher(message))
 
                 elif action_choice == 0:
                     pass
@@ -137,7 +152,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                     #message = input("Enter the encryption message: ")
                         key = input("Enter the key: ")
-                    print("Encrypted message:", gronfield_encryption(message, key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", gronfield_encryption(message, key))
+                    else:
+                        write_output(gronfield_encryption(message, key))
 
                 elif action_choice == 2:
                     method=Method_input()
@@ -148,7 +167,13 @@ if UserPass=="nstu":
                         message =read_file_content()
                     #message = input("Enter the decryption message: ")
                         key = input("Enter the key: ")
-                    print("Decrypted message:", gronsfield_decryption(message, key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypted message:", gronsfield_decryption(message, key))
+                    else:
+                        write_output(gronsfield_decryption(message, key))
+
+
             elif method_choice == 4:  # Vernam Cipher
                 show_encryption_actions()
                 action_choice = int(input())
@@ -161,7 +186,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                 # message = input("Enter the encryption message: ")
                         key = input("Enter the key: ")
-                    print("Encrypted message:", vernam_cipher(message,key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", vernam_cipher(message, key))
+                    else:
+                        write_output(vernam_cipher(message, key))
 
                 elif action_choice == 2:
                     method=Method_input()
@@ -172,7 +201,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                     #message = input("Enter the decryption message: ")
                         key = input("Enter the key: ")
-                    print("Decrypted message:", vernam_cipher(message,key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypted message:", vernam_cipher(message, key))
+                    else:
+                        write_output(vernam_cipher(message, key))
 
 
                 elif action_choice == 0:
@@ -189,9 +222,12 @@ if UserPass=="nstu":
                         #key = input("Enter the key: ")
                     else:
                         message =read_file_content()
-                    #message = input("Enter the encryption message: ")
-                        #key = input("Enter the key: ")
-                    print("Encrypted message:", polibius_encryption(message))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", polibius_encryption(message))
+                    else:
+                        write_output(polibius_encryption(message))
+
                 elif action_choice == 2:
                     method=Method_input()
                     if method==False:
@@ -200,7 +236,11 @@ if UserPass=="nstu":
                     else:
                         message =read_file_content()
                 # message = input("Enter the decryption message: ")
-                    print("Decrypted message:", polybius_decryption(message))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypted message:", polybius_decryption(message))
+                    else:
+                        write_output(polybius_decryption(message))
 
                 elif action_choice == 0:
                     pass
@@ -216,7 +256,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                 #message = input("Enter the encryption message: ")
                         key = input("Enter the key: ")
-                    print("Encrypted message:", xor_encription(message,key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Encrypted message:", xor_encription(message, key))
+                    else:
+                        write_output(xor_encription(message, key))
 
                 elif action_choice == 2:
                     method=Method_input()
@@ -227,7 +271,11 @@ if UserPass=="nstu":
                         message =read_file_content()
                     #message = input("Enter the decryption message: ")
                         key = input("Enter the key: ")
-                    print("Decrypted message:", xor_description(message,key))
+                    method=Method_output()
+                    if method ==False:
+                        print("Decrypted message:", xor_description(message, key))
+                    else:
+                        write_output(xor_description(message, key))
 
             elif method_choice == 0:
                 print("The program is completed.")
