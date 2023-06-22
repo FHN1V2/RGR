@@ -1,99 +1,115 @@
 #include <iostream>
 #include <vector>
 
-using namespace std;
-
-//Функция для выполнения модулярной арифметики (обрабатывает отрицательные числа корректно)
-int mod(int a, int b) {
-    return (a % b + b) % b;
+// Функция для преобразования символа в его числовое значение
+int charToNum(char c) {
+    if (isalpha(c)) {
+        if (islower(c))
+            return c - 'a';
+        else
+            return c - 'A';
+    } else {
+        return -1; // Возвращаем -1, если символ не является буквой
+    }
 }
 
-//Функция для умножения матрицы на вектор
-vector<int> multiplyMatrixVector(const vector<vector<int>>& matrix, const vector<int>& inputVector) {
-    int n = matrix.size();
-    vector<int> result(n, 0);
+// Функция для преобразования числового значения в символ
+char numToChar(int n) {
+    if (n >= 0 && n < 26)
+        return 'a' + n;
+    else if (n >= 26 && n < 52)
+        return 'A' + (n - 26);
+    else
+        return ' '; // Возвращаем пробел, если значение не попадает в диапазон
+}
 
-//Выполнение умножение матрицы на вектор
-    for (int i = 0; i < n; i++) {
-        for (int j = 0; j < n; j++) {
-            result[i] += matrix[i][j] * inputVector[j];
+// Функция для шифрования текста с помощью шифра Хилла
+std::string encryptHill(const std::string& plaintext, const std::vector<std::vector<int>>& key) {
+    std::string ciphertext = "";
+    int keySize = key.size();
+
+    for (int i = 0; i < plaintext.length(); i += keySize) {
+        std::vector<int> block;
+        for (int j = 0; j < keySize; j++) {
+            int num = charToNum(plaintext[i + j]);
+            if (num != -1)
+                block.push_back(num);
         }
-        result[i] = mod(result[i], 256);
+
+        if (block.size() == keySize) {
+            for (int j = 0; j < keySize; j++) {
+                int sum = 0;
+                for (int k = 0; k < keySize; k++) {
+                    sum += key[j][k] * block[k];
+                }
+                sum %= 26;
+                ciphertext += numToChar(sum);
+            }
+        }
     }
 
-    return result; 
+    return ciphertext;
 }
 
-//Функция для шифрования блока текста (шифрует блок текста block с использованием матрицы ключа keyMatrix и возвращает зашифрованный результат в виде строки)
-string encryptBlock(const vector<vector<int>>& keyMatrix, const string& block) {
-    int n = keyMatrix.size();
-    vector<int> inputVector(n);
+// Функция для расшифрования текста с помощью шифра Хилла
+std::string decryptHill(const std::string& ciphertext, const std::vector<std::vector<int>>& key) {
+    std::string plaintext = "";
+    int keySize = key.size();
+    int determinant = key[0][0] * key[1][1] - key[0][1] * key[1][0];
 
-//Преобразования каждого символа в блоке в числовое значение (ASCII-код)
-    for (int i = 0; i < n; i++) {
-        inputVector[i] = static_cast<int>(block[i]); //преобразования типа символов в блоке текста в числовые значения (ASCII-коды) и наоборот
-    }
-
-    vector<int> encrypted = multiplyMatrixVector(keyMatrix, inputVector);
-
-    string result;
-    for (int i = 0; i < n; i++) {
-        result += static_cast<char>(encrypted[i]);
-    }
-
-    return result;
-}
-
-//Функция для дешифрования блока текста (дешифрует блок текста block, используя матрицу ключа keyMatrix, и возвращает результат дешифрации в виде строки)
-string decryptBlock(const vector<vector<int>>& keyMatrix, const string& block) {
-    int n = keyMatrix.size();
-    vector<int> inputVector(n);
-
-//Преобразуем каждый символ в блоке в числовое значение (ASCII-код)
-    for (int i = 0; i < n; i++) {
-        inputVector[i] = static_cast<int>(block[i]);
-    }
-
-    //Вычисляем обратную матрицу ключа
-    int determinant = (keyMatrix[0][0] * keyMatrix[1][1]) - (keyMatrix[0][1] * keyMatrix[1][0]);
-    int multiplicativeInverse = 0;
-
-    for (int i = 0; i < 256; i++) {
-        int temp = (determinant * i) % 256;
-        if (temp == 1) {
-            multiplicativeInverse = i;
+    // Вычисление обратного определителя по модулю 26
+    int inverseDet = -1;
+    for (int i = 0; i < 26; i++) {
+        if ((determinant * i) % 26 == 1) {
+            inverseDet = i;
             break;
         }
     }
 
-    vector<vector<int>> inverseMatrix(n, vector<int>(n));
+    //if (inverseDet == -1) {
+       // std::cout << "It is impossible to decrypt the text, the key determinant has no inverse modulo 26." << std::endl;
+        //return plaintext;
+    //}
 
-    inverseMatrix[0][0] = mod((keyMatrix[1][1] * multiplicativeInverse), 256);
-    inverseMatrix[0][1] = mod((-keyMatrix[0][1] * multiplicativeInverse), 256);
-    inverseMatrix[1][0] = mod((-keyMatrix[1][0] * multiplicativeInverse), 256);
-    inverseMatrix[1][1] = mod((keyMatrix[0][0] * multiplicativeInverse), 256);
+    // Вычисление обратной матрицы
+    std::vector<std::vector<int>> inverseKey(keySize, std::vector<int>(keySize));
+    inverseKey[0][0] = (inverseDet * key[1][1]) % 26;
+    inverseKey[0][1] = (inverseDet * -key[0][1] + 26) % 26;
+    inverseKey[1][0] = (inverseDet * -key[1][0] + 26) % 26;
+    inverseKey[1][1] = (inverseDet * key[0][0]) % 26;
 
-    vector<int> decryptedVector = multiplyMatrixVector(inverseMatrix, inputVector);
+    for (int i = 0; i < ciphertext.length(); i += keySize) {
+        std::vector<int> block;
+        for (int j = 0; j < keySize; j++) {
+            int num = charToNum(ciphertext[i + j]);
+            if (num != -1)
+                block.push_back(num);
+        }
 
-    string result;
-    for (int i = 0; i < n; i++) {
-        result += static_cast<char>(mod(decryptedVector[i], 256));
+        if (block.size() == keySize) {
+            for (int j = 0; j < keySize; j++) {
+                int sum = 0;
+                for (int k = 0; k < keySize; k++) {
+                    sum += inverseKey[j][k] * block[k];
+                }
+                sum %= 26;
+                plaintext += numToChar(sum);
+            }
+        }
     }
 
-    return result;
+    return plaintext;
 }
 
 int main() {
-    string originalText = "HELLO";
-    vector<vector<int>> keyMatrix = { { 3, 2 }, { 1, 4 } };
+    std::vector<std::vector<int>> key = {{6, 24}, {13, 16}}; // Пример ключа размером 2x2
 
-    //Шифрование
-    string encrypted = encryptBlock(keyMatrix, originalText);
-    cout << "Encrypted message: " << encrypted << endl;
+    std::string plaintext = "Hello, World!"; // Пример исходного текста
+    std::string ciphertext = encryptHill(plaintext, key);
+    std::cout << "Encrypted text: " << ciphertext << std::endl;
 
-    //Дешифрование
-    string decrypted = decryptBlock(keyMatrix, encrypted);
-    cout << "Decrypted message: " << decrypted << endl;
+    std::string decryptedText = decryptHill(ciphertext, key);
+    std::cout << "Decrypted text: " << decryptedText << std::endl;
 
     return 0;
 }
