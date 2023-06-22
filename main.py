@@ -5,15 +5,33 @@ from polybius_cipher import polibius_encryption, polybius_decryption
 from vernam_cipher import vernam_cipher
 from xor_cipher import xor_encription, xor_description
 
+def write_file_content(message):
+    fileName=input("Enter file name ")
+    f=open(f"{fileName}.txt",'w')
+    for index in message:
+        f.write(index)
+
+
+
 def read_file_content():
-        with open('text.txt', 'r') as file:
+        fileName=input("Enter file name ")
+        with open(f'{fileName}.txt', 'r') as file:
             text = file.read()
         return text
-
 
 def Method_input():
     print("1. from file ")
     print ("2. from keyboard ")
+    make=int(input())
+    if make ==1:
+        return True
+    else:
+        return False
+    
+
+def Method_output():
+    print ("1. To file")
+    print ("2. To console")
     make=int(input())
     if make ==1:
         return True
